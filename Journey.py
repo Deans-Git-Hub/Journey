@@ -324,9 +324,9 @@ with tab_summary:
     # Controls
     colc1, colc2, _ = st.columns([1,1,2])
     with colc1:
-        weight_mode = st.selectbox("Weighting", ["Confidence", "Frequency", "Equal"], index=0)
+        weight_mode = st.selectbox("Weighting", ["Confidence", "Frequency", "Equal"], index=0, disabled=True)
     with colc2:
-        low_conf_thresh = st.slider("Low-confidence threshold", 0.5, 0.95, 0.75, 0.01)
+        low_conf_thresh = st.slider("Low-confidence threshold", 0.5, 0.95, 0.75, 0.01, disabled=True)
 
     # Weights
     if weight_mode == "Confidence":
