@@ -3,9 +3,9 @@ Journey Map Demo - Full UI with Performance
 ------------------------------------------
 Complete interface showing all intended features, optimized for speed.
 
-Run:
-  pip install streamlit plotly pandas
-  streamlit run demo_app.py
+New in this version
+-------------------
+• Hand‑offs tab – Sankey diagram + KPIs + drill‑down table
 """
 
 import pandas as pd
@@ -139,8 +139,8 @@ with st.sidebar:
 # ------------------------------
 # Tabs
 # ------------------------------
-tab_journey, tab_evidence, tab_themes, tab_summary, tab_compare, tab_export = st.tabs(
-    ["Journey", "Evidence", "Themes", "Summary", "Compare", "Export"]
+tab_journey, tab_evidence, tab_themes, tab_summary, tab_hand_offs, tab_compare, tab_export = st.tabs(
+    ["Journey", "Evidence", "Themes", "Summary", "Hand‑offs", "Compare", "Export"]
 )
 
 # ------------------------------
@@ -324,9 +324,9 @@ with tab_summary:
     # Controls
     colc1, colc2, _ = st.columns([1,1,2])
     with colc1:
-        weight_mode = st.selectbox("Weighting", ["Confidence", "Frequency", "Equal"], index=0, disabled=True)
+        weight_mode = st.selectbox("Weighting", ["Confidence", "Frequency", "Equal"], index=0)
     with colc2:
-        low_conf_thresh = st.slider("Low-confidence threshold", 0.5, 0.95, 0.75, 0.01, disabled=True)
+        low_conf_thresh = st.slider("Low-confidence threshold", 0.5, 0.95, 0.75, 0.01)
 
     # Weights
     if weight_mode == "Confidence":
@@ -436,6 +436,85 @@ with tab_summary:
         st.text_area("Copy-ready text", brief, height=180)
 
 # ------------------------------
+# NEW TAB — Hand‑offs analysis
+# ------------------------------
+with tab_hand_offs:
+    st.subheader("Hand‑offs")
+
+    # Build ordered dataframe
+    df_ho = pd.DataFrame(DEMO_DATA).copy()
+    stage_order_map = {s: i for i, s in enumerate(STAGES)}
+    df_ho["stage_order"] = df_ho["stage"].map(stage_order_map)
+    df_ho = df_ho.sort_values("stage_order").reset_index(drop=True)
+
+    # Compute hand‑offs
+    handoffs = []
+    for i in range(len(df_ho) - 1):
+        a, b = df_ho.iloc[i], df_ho.iloc[i + 1]
+        handoffs.append({
+            "from_persona": a["persona"],
+            "to_persona":   b["persona"],
+            "mentions":     min(a["frequency"], b["frequency"]),   # simple heuristic
+            "sentiment_delta": b["sentiment"] - a["sentiment"],
+            "confidence_avg":  (a["confidence"] + b["confidence"]) / 2,
+        })
+    df_h = pd.DataFrame(handoffs)
+
+    # Metrics ----------------------------------
+    col1, col2, col3, col4 = st.columns(4)
+    with col1: st.metric("Total Hand‑offs", len(df_h))
+    with col2: st.metric("Avg Δ Sentiment", f"{df_h['sentiment_delta'].mean():+.2f}")
+    worst = df_h.loc[df_h["sentiment_delta"].idxmin()]
+    best  = df_h.loc[df_h["sentiment_delta"].idxmax()]
+    with col3: st.metric("Biggest Drop", f"{worst['from_persona']} ➜ {worst['to_persona']} ({worst['sentiment_delta']:+.2f})")
+    with col4: st.metric("Biggest Lift", f"{best['from_persona']} ➜ {best['to_persona']} ({best['sentiment_delta']:+.2f})")
+
+    st.divider()
+
+    # Sankey diagram ---------------------------
+    personas_nodes = list(pd.unique(df_h[["from_persona", "to_persona"]].values.ravel()))
+    node_id = {p: i for i, p in enumerate(personas_nodes)}
+
+    def delta_color(d):
+        if d < -0.05:
+            return "rgba(198,45,40,0.60)"   # red
+        if d >  0.05:
+            return "rgba(68,170,68,0.60)"   # green
+        return "rgba(140,140,140,0.45)"     # grey
+
+    sankey = go.Figure(go.Sankey(
+        arrangement="snap",
+        node=dict(label=personas_nodes, pad=18, thickness=15, color="rgba(0,0,0,0.35)"),
+        link=dict(
+            source=df_h["from_persona"].map(node_id),
+            target=df_h["to_persona"].map(node_id),
+            value=df_h["mentions"],
+            color=df_h["sentiment_delta"].apply(delta_color),
+            customdata=df_h[["mentions", "sentiment_delta"]],
+            hovertemplate=(
+                "%{source.label} ➜ %{target.label}<br>"
+                "Mentions: %{customdata[0]}<br>"
+                "Δ sentiment: %{customdata[1]:+.2f}<extra></extra>"
+            )
+        )
+    ))
+    sankey.update_layout(
+        height=420, margin=dict(l=10, r=10, t=10, b=10),
+        plot_bgcolor="white", paper_bgcolor="white"
+    )
+    st.plotly_chart(sankey, use_container_width=True, config={"displayModeBar": False})
+
+    st.divider()
+
+    # Drill‑down table -------------------------
+    st.markdown("**Hand‑off Details** _(sorted by Δ sentiment)_")
+    st.dataframe(
+        df_h.sort_values("sentiment_delta").reset_index(drop=True),
+        use_container_width=True,
+        hide_index=True
+    )
+
+# ------------------------------
 # Compare (placeholder) & Export (placeholder)
 # ------------------------------
 with tab_compare:
@@ -465,6 +544,9 @@ with st.expander("🔍 Demo Technical Details"):
 **Working Features**
 - ✅ Journey swim-lane visualization (Plotly)
 - ✅ Evidence touchpoint details
+- ✅ Themes heatmap
+- ✅ Summary dashboards
+- ✅ **NEW** Hand‑offs Sankey analysis
 - ✅ Sentiment legend toggle
 - ✅ Aggregation (cluster) style toggle
 - ✅ Interactive hover tooltips
