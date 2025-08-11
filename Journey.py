@@ -1,8 +1,7 @@
 """
-Journey Map Demo - Full UI with Performance
-------------------------------------------
-Complete interface showing all intended features, optimized for speed.
-
+Journey Map Demo — Full UI with Updated Personas
+------------------------------------------------
+Interface updated to align with Supply Wisdom customer-research personas.
 Run:
   pip install streamlit plotly pandas
   streamlit run demo_app.py
@@ -18,100 +17,132 @@ import streamlit as st
 # ------------------------------
 st.set_page_config(page_title="Journey Map Demo", layout="wide")
 st.title("🗺️ Journey Map Demo — Supply Wisdom TPRM")
-st.caption("Complete interface demo with hardcoded data for optimal performance.")
+st.caption("Interface aligned with updated buyer & user personas.")
 st.info("🚀 DEMO MODE: All filters and controls visible, core functionality working")
 
 # ------------------------------
-# Hardcoded demo data
+# Hardcoded demo data (one touchpoint per persona)
 # ------------------------------
 DEMO_DATA = [
-    {"stage": "Discover Need", "persona": "CRO / ERM", "label": "Board pressure to modernize TPRM", "sentiment": 0.18, "frequency": 24, "confidence": 0.80, "emoji": "🙂"},
-    {"stage": "Evaluation & RFx", "persona": "TPRM Lead", "label": "Compare questionnaires vs real-time intelligence", "sentiment": -0.10, "frequency": 31, "confidence": 0.78, "emoji": "😐"},
-    {"stage": "Approval & Onboarding", "persona": "Procurement Lead", "label": "Accelerate vendor onboarding (Telecom)", "sentiment": 0.62, "frequency": 57, "confidence": 0.86, "emoji": "😄"},
-    {"stage": "Continuous Monitoring", "persona": "ERM Director", "label": "Lifecycle monitoring & governance", "sentiment": 0.55, "frequency": 66, "confidence": 0.84, "emoji": "😄"},
-    {"stage": "Use — Alerts & Triage", "persona": "Vendor Risk Analyst", "label": "Real-time alerts replace manual checks", "sentiment": 0.48, "frequency": 75, "confidence": 0.82, "emoji": "😄"},
-    {"stage": "Reporting & Audit", "persona": "Compliance Officer", "label": "QPRs & risk insight packs", "sentiment": 0.45, "frequency": 29, "confidence": 0.80, "emoji": "😄"},
-    {"stage": "Remediation & Supplier Mgmt", "persona": "Procurement Lead", "label": "Scorecards drive consolidation", "sentiment": 0.38, "frequency": 40, "confidence": 0.78, "emoji": "🙂"},
-    {"stage": "Onboarding (Healthcare)", "persona": "Procurement Lead", "label": "Eliminate questionnaires for faster onboarding", "sentiment": 0.42, "frequency": 36, "confidence": 0.77, "emoji": "😄"},
-    {"stage": "Compliance & Oversight", "persona": "Compliance Officer", "label": "Maintain SOC2 & impress regulators", "sentiment": 0.44, "frequency": 22, "confidence": 0.79, "emoji": "😄"},
-    {"stage": "Renewal & Expansion", "persona": "CFO", "label": "Business case: do more with less", "sentiment": 0.50, "frequency": 18, "confidence": 0.75, "emoji": "😄"},
+    {
+        "stage": "Reporting & Audit",
+        "persona": "Risk Executive",
+        "label": "End-to-end audit-evidence automation",
+        "sentiment": 0.55,
+        "frequency": 30,
+        "confidence": 0.85,
+        "emoji": "🙂"
+    },
+    {
+        "stage": "Use — Alerts & Triage",
+        "persona": "Info Security Executive",
+        "label": "Real-time exploit monitoring integration",
+        "sentiment": 0.30,
+        "frequency": 40,
+        "confidence": 0.82,
+        "emoji": "🙂"
+    },
+    {
+        "stage": "Approval & Onboarding",
+        "persona": "Operating Executive",
+        "label": "Shorten vendor onboarding cycles",
+        "sentiment": 0.65,
+        "frequency": 50,
+        "confidence": 0.88,
+        "emoji": "😄"
+    },
+    {
+        "stage": "Evaluation & RFx",
+        "persona": "Procurement Executive",
+        "label": "Risk-balanced sourcing optimization",
+        "sentiment": 0.40,
+        "frequency": 45,
+        "confidence": 0.78,
+        "emoji": "🙂"
+    },
+    {
+        "stage": "Onboarding (Healthcare)",
+        "persona": "Procurement/Onboarding Specialist",
+        "label": "Embed risk intel in RFx",
+        "sentiment": 0.45,
+        "frequency": 35,
+        "confidence": 0.80,
+        "emoji": "🙂"
+    },
+    {
+        "stage": "Discover Need",
+        "persona": "TPRM Champion / Product Owner",
+        "label": "Govern repeatable TPRM program",
+        "sentiment": 0.35,
+        "frequency": 25,
+        "confidence": 0.83,
+        "emoji": "🙂"
+    },
+    {
+        "stage": "Continuous Monitoring",
+        "persona": "Analyst",
+        "label": "Automate alert triage workflows",
+        "sentiment": 0.25,
+        "frequency": 55,
+        "confidence": 0.77,
+        "emoji": "🙂"
+    },
 ]
 
-# Pre-laid coordinates for instant layout
+# Pre-laid coordinates for instant layout (one per touchpoint)
 COORDINATES = [
-    {"x": 0, "y": 0}, {"x": 1, "y": 1}, {"x": 2, "y": 2}, {"x": 3, "y": 3}, {"x": 4, "y": 4},
-    {"x": 5, "y": 5}, {"x": 6, "y": 2}, {"x": 7, "y": 2}, {"x": 8, "y": 5}, {"x": 9, "y": 6}
+    {"x": 0, "y": 0},
+    {"x": 1, "y": 1},
+    {"x": 2, "y": 2},
+    {"x": 3, "y": 3},
+    {"x": 4, "y": 4},
+    {"x": 5, "y": 5},
+    {"x": 6, "y": 6},
 ]
 
+# Journey stages (x-axis) and updated personas (y-axis)
 STAGES = [
     "Discover Need", "Evaluation & RFx", "Approval & Onboarding", "Continuous Monitoring",
     "Use — Alerts & Triage", "Reporting & Audit", "Remediation & Supplier Mgmt",
     "Onboarding (Healthcare)", "Compliance & Oversight", "Renewal & Expansion"
 ]
 PERSONAS = [
-    "CRO / ERM", "TPRM Lead", "Procurement Lead", "ERM Director",
-    "Vendor Risk Analyst", "Compliance Officer", "CFO"
+    "Risk Executive",
+    "Info Security Executive",
+    "Operating Executive",
+    "Procurement Executive",
+    "Procurement/Onboarding Specialist",
+    "TPRM Champion / Product Owner",
+    "Analyst",
 ]
 
-# ---- (Legacy) green matrix constants (not used in blue heatmap but kept for reference)
+# Legacy green-theme map (for reference; unused)
 THEMES_ORDER = [
     "Real-time Intelligence", "Process Automation", "Compliance Support",
     "ROI & Efficiency", "Legacy Pain Points", "Risk Coverage", "Time Savings",
 ]
-THEME_MAP = {
-    "Board pressure to modernize TPRM": ["Legacy Pain Points", "Real-time Intelligence"],
-    "Compare questionnaires vs real-time intelligence": ["Legacy Pain Points", "Real-time Intelligence"],
-    "Accelerate vendor onboarding (Telecom)": ["Process Automation", "ROI & Efficiency"],
-    "Lifecycle monitoring & governance": ["Risk Coverage", "Real-time Intelligence"],
-    "Real-time alerts replace manual checks": ["Risk Coverage", "Real-time Intelligence"],
-    "QPRs & risk insight packs": ["Compliance Support", "ROI & Efficiency"],
-    "Scorecards drive consolidation": ["Process Automation", "ROI & Efficiency"],
-    "Eliminate questionnaires for faster onboarding": ["Process Automation", "Time Savings"],
-    "Maintain SOC2 & impress regulators": ["Compliance Support", "ROI & Efficiency"],
-    "Business case: do more with less": ["ROI & Efficiency", "Process Automation"],
+THEME_MAP = {}
+
+# Blue-heatmap theme mapping for new labels
+THEME_MAP_BLUE = {
+    "End-to-end audit-evidence automation": ["audit artifacts", "soc2 evidence"],
+    "Real-time exploit monitoring integration": ["external intel", "operational"],
+    "Shorten vendor onboarding cycles": ["time savings", "process automation"],
+    "Risk-balanced sourcing optimization": ["vendor comparison", "cost savings"],
+    "Embed risk intel in RFx": ["questionnaire alternative", "external intel"],
+    "Govern repeatable TPRM program": ["operational", "real-time intelligence"],
+    "Automate alert triage workflows": ["audit artifacts", "operational"],
 }
 
-# ---- Blue heatmap look constants (match screenshot)
-HEATMAP_STAGES = [
-    "Approval & Onboarding",
-    "Compliance & Oversight (Insurance)",
-    "Continuous Monitoring",
-    "Discover Need",
-    "Evaluation & RFx",
-    "Onboarding (Healthcare)",
-    "Remediation & Supplier Mgmt",
-    "Renewal & Expansion",
-    "Reporting & Audit",
-    "Use — Alerts & Triage",
-]
 HEATMAP_THEMES = [
-    "roi narrative",
-    "soc2 evidence",
-    "audit artifacts",
-    "cost savings",
-    "external intel",
-    "headcount savings",
-    "move from questionnaires",
-    "operational",
-    "questionnaire alternative",
-    "scorecards",
-    "vendor comparison",
+    "audit artifacts", "soc2 evidence", "operational", "external intel",
+    "time savings", "process automation", "questionnaire alternative",
+    "vendor comparison", "cost savings", "real-time intelligence"
 ]
-THEME_MAP_BLUE = {
-    "Business case: do more with less": ["roi narrative", "headcount savings"],
-    "Maintain SOC2 & impress regulators": ["soc2 evidence", "cost savings"],
-    "QPRs & risk insight packs": ["audit artifacts", "cost savings"],
-    "Real-time alerts replace manual checks": ["move from questionnaires", "operational"],
-    "Lifecycle monitoring & governance": ["external intel"],
-    "Eliminate questionnaires for faster onboarding": ["questionnaire alternative"],
-    "Scorecards drive consolidation": ["scorecards", "vendor comparison"],
-    "Accelerate vendor onboarding (Telecom)": ["operational"],
-    "Compare questionnaires vs real-time intelligence": ["move from questionnaires"],
-    "Board pressure to modernize TPRM": ["external intel"],
-}
+HEATMAP_STAGES = STAGES  # reuse same ordering
 
 # ------------------------------
-# Sidebar — working + demo controls
+# Sidebar — controls
 # ------------------------------
 with st.sidebar:
     st.header("🔧 Controls")
@@ -134,7 +165,7 @@ with st.sidebar:
     st.multiselect("Industries", ["Telecom", "Banking", "Healthcare", "Insurance", "Financial Services"], disabled=True)
 
     st.divider()
-    st.caption("📊 Showing 10 of 10 touchpoints")
+    st.caption(f"📊 Showing {len(DEMO_DATA)} of {len(DEMO_DATA)} touchpoints")
 
 # ------------------------------
 # Tabs
@@ -144,7 +175,7 @@ tab_journey, tab_evidence, tab_themes, tab_summary, tab_compare, tab_export = st
 )
 
 # ------------------------------
-# Journey — pretty Plotly with polished hover
+# Journey — swim-lanes scatter
 # ------------------------------
 with tab_journey:
     st.subheader("Journey Swim-lanes")
@@ -161,19 +192,16 @@ with tab_journey:
         x="x", y="y",
         size="frequency",
         color="sentiment",
-        hover_data={"stage": False, "persona": False, "sentiment": False, "frequency": False, "x": False, "y": False},
+        hover_data={"x": False, "y": False},
         color_continuous_scale="RdYlGn",
         color_continuous_midpoint=0,
         range_color=[-1, 1],
         size_max=size_max,
         opacity=0.88 if cluster_mode else 0.95,
     )
-
-    # Centered emoji + clean hover
     fig.update_traces(
         mode="markers+text",
-        text=df["emoji"],
-        textposition="middle center",
+        text=df["emoji"], textposition="middle center",
         marker=dict(line=dict(width=1, color="rgba(0,0,0,0.35)"))
     )
     custom = pd.DataFrame({
@@ -196,30 +224,38 @@ with tab_journey:
         )
     )
 
-    # Swim-lane backgrounds + dotted stage separators
     shapes = []
     for i in range(len(PERSONAS)):
         shapes.append(dict(
             type="rect", xref="x", yref="y",
-            x0=-0.5, x1=len(STAGES)-0.5,
-            y0=i-0.45, y1=i+0.45,
+            x0=-0.5, x1=len(STAGES)-0.5, y0=i-0.45, y1=i+0.45,
             fillcolor="rgba(0,0,0,0.03)" if i % 2 == 0 else "rgba(0,0,0,0.06)",
             line=dict(width=0), layer="below"
         ))
     for i in range(len(STAGES)):
         shapes.append(dict(
-            type="line", x0=i, x1=i, y0=-0.5, y1=len(PERSONAS)-0.5, xref="x", yref="y",
-            line=dict(color="rgba(0,0,0,0.18)", width=1, dash="dot"), layer="below"
+            type="line", x0=i, x1=i, y0=-0.5, y1=len(PERSONAS)-0.5,
+            xref="x", yref="y",
+            line=dict(color="rgba(0,0,0,0.18)", width=1, dash="dot"),
+            layer="below"
         ))
 
     fig.update_layout(
         shapes=shapes,
-        xaxis=dict(tickmode="array", tickvals=list(range(len(STAGES))), ticktext=STAGES,
-                   range=[-0.5, len(STAGES)-0.5], title=None, tickangle=-45, zeroline=False, showgrid=False),
-        yaxis=dict(tickmode="array", tickvals=list(range(len(PERSONAS))), ticktext=PERSONAS,
-                   range=[-0.5, len(PERSONAS)-0.5], title=None, zeroline=False, showgrid=False),
-        height=520, showlegend=False, margin=dict(l=160, r=30, t=20, b=120),
-        plot_bgcolor="white", paper_bgcolor="white", hoverlabel=dict(bgcolor="white")
+        xaxis=dict(
+            tickmode="array", tickvals=list(range(len(STAGES))), ticktext=STAGES,
+            range=[-0.5, len(STAGES)-0.5], title=None, tickangle=-45,
+            zeroline=False, showgrid=False
+        ),
+        yaxis=dict(
+            tickmode="array", tickvals=list(range(len(PERSONAS))), ticktext=PERSONAS,
+            range=[-0.5, len(PERSONAS)-0.5], title=None,
+            zeroline=False, showgrid=False
+        ),
+        height=520, showlegend=False,
+        margin=dict(l=160, r=30, t=20, b=120),
+        plot_bgcolor="white", paper_bgcolor="white",
+        hoverlabel=dict(bgcolor="white")
     )
     if not show_colorbar:
         fig.update_coloraxes(showscale=False)
@@ -227,39 +263,26 @@ with tab_journey:
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 # ------------------------------
-# Evidence — prebuilt details
+# Evidence — touchpoint details
 # ------------------------------
 with tab_evidence:
     st.subheader("Evidence")
-
-    evidence_options = [
-        "Board pressure to modernize TPRM — CRO / ERM",
-        "Compare questionnaires vs real-time intelligence — TPRM Lead",
-        "Accelerate vendor onboarding (Telecom) — Procurement Lead",
-        "Lifecycle monitoring & governance — ERM Director",
-        "Real-time alerts replace manual checks — Vendor Risk Analyst",
-        "QPRs & risk insight packs — Compliance Officer",
-        "Scorecards drive consolidation — Procurement Lead",
-        "Eliminate questionnaires for faster onboarding — Procurement Lead",
-        "Maintain SOC2 & impress regulators — Compliance Officer",
-        "Business case: do more with less — CFO",
-    ]
+    evidence_options = [f"{d['label']} — {d['persona']}" for d in DEMO_DATA]
     selected = st.selectbox("Select a touchpoint", evidence_options)
 
+    # Hardcoded details keyed by label — replace with real data as needed
     evidence_details = {
-        "Board pressure to modernize TPRM — CRO / ERM": {"sentiment": "0.18 🙂", "frequency": "24 mentions", "quote": "We need external risk intelligence beyond point-in-time assessments.", "themes": "Move from questionnaires, Real-time risk", "actions": "Assess continuous monitoring vendors"},
-        "Compare questionnaires vs real-time intelligence — TPRM Lead": {"sentiment": "-0.10 😐", "frequency": "31 mentions", "quote": "Legacy questionnaires go stale and miss dynamic risks.", "themes": "Legacy process pain, Evidence-based alerts", "actions": "Pilot Supply Wisdom against top vendors"},
-        "Accelerate vendor onboarding (Telecom) — Procurement Lead": {"sentiment": "0.62 😄", "frequency": "57 mentions", "quote": "Shifted from point-in-time questionnaires to real-time alerting.", "themes": "SLA compliance, Automation", "actions": "Embed risk intel into RFx & approvals"},
-        "Lifecycle monitoring & governance — ERM Director": {"sentiment": "0.55 😄", "frequency": "66 mentions", "quote": "We can manage third-party risk throughout the lifecycle.", "themes": "External intel, Geopolitical, Operational", "actions": "Expand scope to Nth-party & location risk"},
-        "Real-time alerts replace manual checks — Vendor Risk Analyst": {"sentiment": "0.48 😄", "frequency": "75 mentions", "quote": "Actionable data on small private companies, not just the big public ones.", "themes": "Private vendor coverage, Negative news", "actions": "Automate analyst queue from alerts"},
-        "QPRs & risk insight packs — Compliance Officer": {"sentiment": "0.45 😄", "frequency": "29 mentions", "quote": "Reports double as audit artifacts and regulator-ready evidence.", "themes": "Audit artifacts, SOC2 support", "actions": "Standardize quarterly risk reviews"},
-        "Scorecards drive consolidation — Procurement Lead": {"sentiment": "0.38 🙂", "frequency": "40 mentions", "quote": "Because of Supply Wisdom, we have our fingertips on the true pulse of our third parties.", "themes": "Scorecards, Vendor comparison", "actions": "Use scorecards for renewals & discounts"},
-        "Eliminate questionnaires for faster onboarding — Procurement Lead": {"sentiment": "0.42 😄", "frequency": "36 mentions", "quote": "Procurement can expedite onboarding without sacrificing risk quality.", "themes": "Questionnaire alternative, Time-to-value", "actions": "Integrate comprehensive risk intelligence pre-onboarding"},
-        "Maintain SOC2 & impress regulators — Compliance Officer": {"sentiment": "0.44 😄", "frequency": "22 mentions", "quote": "Proactive insights helped us avoid potential issues with regulators.", "themes": "SOC2 evidence, Cost savings", "actions": "Centralize compliance packs"},
-        "Business case: do more with less — CFO": {"sentiment": "0.50 😄", "frequency": "18 mentions", "quote": "We'd have to triple the team to match this impact with old methods.", "themes": "ROI narrative, Headcount savings", "actions": "Expand monitoring to non-critical vendors"},
+        d["label"]: {
+            "sentiment": f"{d['sentiment']:.2f} {d['emoji']}",
+            "frequency": f"{d['frequency']} mentions",
+            "quote": "<Insert representative quote here>",
+            "themes": ", ".join(THEME_MAP_BLUE.get(d["label"], [])),
+            "actions": "<Insert suggested action here>"
+        }
+        for d in DEMO_DATA
     }
 
-    details = evidence_details[selected]
+    details = evidence_details[selected.split(" — ")[0]]
     st.markdown(f"### {selected.split(' — ')[0]}")
     c1, c2 = st.columns(2)
     with c1:
@@ -273,7 +296,7 @@ with tab_evidence:
     st.write(f"• {details['actions']}")
 
 # ------------------------------
-# Themes — blue, stage-ordered heatmap
+# Themes — blue heatmap
 # ------------------------------
 with tab_themes:
     st.subheader("Themes × Stages")
@@ -281,19 +304,12 @@ with tab_themes:
 
     df_themes = pd.DataFrame(DEMO_DATA).copy()
     df_themes["themes"] = df_themes["label"].map(lambda s: THEME_MAP_BLUE.get(s, []))
-    df_themes["themes"] = df_themes["themes"].apply(lambda v: v if isinstance(v, list) else [])
-
     df_exp = df_themes.explode("themes").dropna(subset=["themes"])
 
     if df_exp.empty:
         st.info("No themes found in the current demo selection.")
     else:
         mat = df_exp.groupby(["themes", "stage"])["frequency"].sum().unstack(fill_value=0)
-
-        # rename for parity with screenshot
-        if "Compliance & Oversight" in mat.columns:
-            mat = mat.rename(columns={"Compliance & Oversight": "Compliance & Oversight (Insurance)"})
-
         mat = mat.reindex(index=HEATMAP_THEMES, columns=HEATMAP_STAGES, fill_value=0)
 
         z = mat.values
@@ -306,29 +322,29 @@ with tab_themes:
             hovertemplate="<b>%{y}</b><br>Stage: %{x}<br>Mentions: %{z}<extra></extra>",
         ))
         heat.update_layout(
-            xaxis=dict(title=None, tickangle=-35, tickfont=dict(color="#6B7280"), showgrid=False, zeroline=False),
-            yaxis=dict(title=None, tickfont=dict(color="#6B7280"), showgrid=False, zeroline=False, autorange="reversed"),
+            xaxis=dict(title=None, tickangle=-35, tickfont=dict(color="#6B7280"),
+                       showgrid=False, zeroline=False),
+            yaxis=dict(title=None, tickfont=dict(color="#6B7280"),
+                       showgrid=False, zeroline=False, autorange="reversed"),
             margin=dict(l=170, r=40, t=10, b=110),
-            height=460, paper_bgcolor="white", plot_bgcolor="rgba(218, 238, 255, 0.35)",
+            height=460, paper_bgcolor="white",
+            plot_bgcolor="rgba(218, 238, 255, 0.35)",
         )
         st.plotly_chart(heat, use_container_width=True, config={"displayModeBar": False})
 
 # ------------------------------
-# Summary — KPI cards + stage bars + persona bar + opportunity quadrant + brief
+# Summary — KPI cards, bars, quadrant, brief
 # ------------------------------
 with tab_summary:
     st.subheader("Summary")
-
     df_sum = pd.DataFrame(DEMO_DATA)
 
-    # Controls
     colc1, colc2, _ = st.columns([1,1,2])
     with colc1:
         weight_mode = st.selectbox("Weighting", ["Confidence", "Frequency", "Equal"], index=0)
     with colc2:
         low_conf_thresh = st.slider("Low-confidence threshold", 0.5, 0.95, 0.75, 0.01)
 
-    # Weights
     if weight_mode == "Confidence":
         weights = df_sum["confidence"].clip(lower=0.001)
     elif weight_mode == "Frequency":
@@ -336,10 +352,9 @@ with tab_summary:
     else:
         weights = pd.Series(1.0, index=df_sum.index)
 
-    # KPIs
     avg_sentiment = float((df_sum["sentiment"] * weights).sum() / weights.sum())
     total_mentions = int(df_sum["frequency"].sum())
-    coverage = len(set(zip(df_sum["stage"], df_sum["persona"]))) / (len(STAGES) * len(PERSONAS))
+    coverage = len(df_sum) / (len(STAGES) * len(PERSONAS))
     low_conf_share = float((df_sum["confidence"] < low_conf_thresh).mean())
 
     k1, k2, k4 = st.columns(3)
@@ -357,8 +372,7 @@ with tab_summary:
             df_sum.assign(w=weights)
                   .groupby("stage")
                   .apply(lambda g: (g["sentiment"] * g["w"]).sum() / g["w"].sum())
-                  .rename("avg_sentiment")
-                  .reset_index()
+                  .reset_index(name="avg_sentiment")
                   .sort_values("avg_sentiment", ascending=True)
         )
         fig_stage = px.bar(stage_stats, x="avg_sentiment", y="stage",
@@ -370,18 +384,16 @@ with tab_summary:
         fig_stage.add_vline(x=0.40, line_dash="dash", line_color="gray", opacity=0.7)
         st.plotly_chart(fig_stage, use_container_width=True, config={"displayModeBar": False})
 
-    # Persona engagement (FIXED: use temp frame with weights column)
     with right:
         st.markdown("**Persona Engagement**")
-        tmp = df_sum.assign(w=weights)
         persona_agg = (
-            tmp.groupby("persona")
-               .apply(lambda g: pd.Series({
-                   "total_mentions": g["frequency"].sum(),
-                   "avg_sentiment": (g["sentiment"] * g["w"]).sum() / g["w"].sum()
-               }))
-               .reset_index()
-               .sort_values("total_mentions", ascending=True)
+            df_sum.assign(w=weights)
+                  .groupby("persona")
+                  .apply(lambda g: pd.Series({
+                      "total_mentions": g["frequency"].sum(),
+                      "avg_sentiment": (g["sentiment"] * g["w"]).sum() / g["w"].sum()
+                  })).reset_index()
+                  .sort_values("total_mentions", ascending=True)
         )
         fig_pers = px.bar(persona_agg, x="total_mentions", y="persona",
                           color="avg_sentiment", color_continuous_scale="RdYlGn",
@@ -400,7 +412,8 @@ with tab_summary:
         sent_threshold = 0.30
         fig_sc = px.scatter(
             df_sum, x="frequency", y="sentiment",
-            size="frequency", color="sentiment", color_continuous_scale="RdYlGn",
+            size="frequency", color="sentiment",
+            color_continuous_scale="RdYlGn",
             hover_name="label", text=df_sum["persona"],
             size_max=38, range_y=[-0.2, 1.0]
         )
@@ -436,25 +449,22 @@ with tab_summary:
         st.text_area("Copy-ready text", brief, height=180)
 
 # ------------------------------
-# Compare (placeholder) & Export (placeholder)
+# Compare & Export (placeholders)
 # ------------------------------
 with tab_compare:
     st.subheader("Compare Studies")
-    st.info("🚧 Demo: Would allow comparison between different journey datasets")
+    st.info("🚧 Demo: Comparison UI")
     st.file_uploader("Upload comparison JSON", type=["json"], disabled=True)
-    st.write("**Sample Comparison:**")
-    st.write("• Current study: 0.39 avg sentiment")
-    st.write("• Previous quarter: 0.31 avg sentiment")
-    st.write("• **Improvement:** +0.08 sentiment increase")
+    st.write("• Current vs. previous sentiment…")
 
 with tab_export:
     st.subheader("Export")
-    st.info("🚧 Demo: Would provide data export functionality")
+    st.info("🚧 Demo: Export UI")
     c1, c2, c3 = st.columns(3)
     with c1: st.button("⬇️ Download CSV", disabled=True)
     with c2: st.button("⬇️ Download JSON", disabled=True)
     with c3: st.button("⬇️ Download PNG", disabled=True)
-    st.write("**Export Options:** CSV (raw), JSON (structured), PNG (chart image)")
+    st.write("**Options:** CSV, JSON, PNG")
 
 # ------------------------------
 # Debug Footer / Notes
