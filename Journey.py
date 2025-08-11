@@ -342,10 +342,9 @@ with tab_summary:
     coverage = len(set(zip(df_sum["stage"], df_sum["persona"]))) / (len(STAGES) * len(PERSONAS))
     low_conf_share = float((df_sum["confidence"] < low_conf_thresh).mean())
 
-    k1, k2, k3, k4 = st.columns(4)
+    k1, k2, k4 = st.columns(3)
     with k1: st.metric("Avg Sentiment", f"{avg_sentiment:.2f}")
     with k2: st.metric("Total Mentions", f"{total_mentions}")
-    with k3: st.metric("Coverage", f"{coverage:.0%}")
     with k4: st.metric("Low-confidence Share", f"{low_conf_share:.0%}")
 
     st.divider()
