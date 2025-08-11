@@ -401,7 +401,7 @@ with tab_summary:
         fig_sc = px.scatter(
             df_sum, x="frequency", y="sentiment",
             size="frequency", color="sentiment", color_continuous_scale="RdYlGn",
-            hover_name="label", text=df_sum["persona"].str.split().str[0],
+            hover_name="label", text=df_sum["persona"],
             size_max=38, range_y=[-0.2, 1.0]
         )
         fig_sc.update_traces(textposition="top center",
